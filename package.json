@@ -1,0 +1,26 @@
+{
+  "name": "elm-shopping-cart",
+  "version": "1.0.0",
+  "description": "Sample shopping cart application built with Elm language.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/froyoframework/elm-shopping-cart-sample.git"
+  },
+  "keywords": [
+    "elm",
+    "sample"
+  ],
+  "author": "Asep Bagja Priandana",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/froyoframework/elm-shopping-cart-sample/issues"
+  },
+  "homepage": "https://github.com/froyoframework/elm-shopping-cart-sample#readme",
+  "dependencies": {
+    "bulma": "^0.2.3"
+  }
+}
