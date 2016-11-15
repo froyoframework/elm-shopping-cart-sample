@@ -1,16 +1,20 @@
 module Types exposing (..)
 
-import Http
-
 type alias Product =
     { title : String
     , description : String
-    , price : Maybe Int
+    , price : Int
     }
+
+type alias Catalog = { item : List Product }
 
 type alias Cart =
     { item : List Product
     , subTotal : Int
     }
 
-type Action = Buy | FetchCatalog (Result Http.error String)
+type Action 
+    = Buy 
+    | FetchCatalog
+    | ErrorOccurred String
+    | DataFetched (List Product)

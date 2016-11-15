@@ -1,20 +1,55 @@
-import Html exposing (..)
-import Parent as ParentView
+import Html.App as App
+import Parent as ParentView exposing (parentContainer)
 import Types exposing (..)
 import Http
-import Json.Decode as Decode
+import Json.Decode as Json exposing ((:=))
+import Task exposing (Task)
 
-main : Html tag
+main : Program Never
 main =
-    ParentView.parentContainer
+    App.program
+        { init = init
+        , view = parentContainer
+        , update = update
+        , subscriptions = \_ -> Sub.none
+        }
 
 -- Model
-init : (Product, Cmd Action)
-init = (Product "" "" Nothing, Cmd.none)
+init : (Catalog, Cmd Action)
+init =
+    let model = { item = []}
+    in model ! [fetchCatalogs]
+
+-- Update
+update : Action -> Catalog -> (Catalog, Cmd Action)
+update msg model =
+    case msg of
+        Buy -> model ! []
+
+        FetchCatalog -> model ! [fetchCatalogs]
+
+        ErrorOccurred errorMessage -> model ! []
+
+        DataFetched products -> { model | item = products} ! []
+
 
 -- Http
-getCatalogs : Cmd Action
-getCatalogs =
-    let url = "http://localhost:3000/data"
-    in Http.send FetchCatalog <| Http.get url decodeCatalogUrl
+productInfoDecoder : Json.Decoder Product
+productInfoDecoder =
+    Json.object3
+        Product
+        ("nama" := Json.string)
+        ("deskripsi" := Json.string)
+        ("harga" := Json.int)
 
+decodeProductsList : Json.Decoder (List Product)
+decodeProductsList =
+    Json.list productInfoDecoder
+
+fetchCatalogs : Cmd Action
+fetchCatalogs =
+    let url = "http://localhost:3000/data"
+    in
+        Http.get decodeProductsList url
+            |> Task.mapError toString
+            |> Task.perform ErrorOccurred DataFetched
